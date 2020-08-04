@@ -1,11 +1,10 @@
 from conans import ConanFile, CMake, tools
 
-
 class glslvkConan(ConanFile):
     name = "glslvk"
     version = "0.0.1"
     settings = "os", "compiler", "build_type", "arch"
-    requires = ("glslang/master-tot@wumo/stable")
+    requires = ("shaderc/2020.2@wumo/stable")
     generators = "cmake"
     scm = {
         "type": "git",
@@ -17,7 +16,7 @@ class glslvkConan(ConanFile):
         "shared": [True, False],
     }
     default_options = {
-        "shared": False
+        "shared": False,
     }
 
     def configure_cmake(self):
@@ -42,6 +41,8 @@ class glslvkConan(ConanFile):
         cmake.install()
         self.copy("*.h", dst="include", src=f"{self.name}/src")
         self.copy("*.hpp", dst="include", src=f"{self.name}/src")
-    
+        self.copy("compile_shaders.cmake", dst="cmake", src=f"{self.name}/cmake")
+
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.build_modules.append("cmake/compile_shaders.cmake")
