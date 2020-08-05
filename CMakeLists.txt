@@ -13,10 +13,7 @@ conan_cmake_run(BASIC_SETUP CONANFILE conanfile.py BUILD missing)
 option(BUILD_TEST "Build test" ON)
 option(BUILD_SHARED "Build shared lib" OFF)
 
-set(sources
-  src/glslvk/shader_compiler_shaderc.cpp
-  src/glslvk/shader_compiler_glslang.cpp
-  )
+set(sources src/glslvk/shader_compiler_shaderc.cpp)
 
 if(BUILD_SHARED)
   add_library(glslvk SHARED ${sources})
