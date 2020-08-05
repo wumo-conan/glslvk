@@ -1,7 +1,7 @@
 # glslvk
 
 GLSL shader compiler. Features:
-* Support generating ninja depfile for shader includes. Thus modified shader header files can only trigger necessary shader source files' recompilation.
+* Support generating ninja depfile for shader includes. Thus modified shader header files can only trigger necessary shader source files' recompilation. (Only work on `Ninja` Generator)
 * Generate  seperated header and source cpp files for compiled SPV binaries.
 * C++ 20
 
@@ -66,7 +66,7 @@ $ pip install conan
 ## Additional conan remotes
 ```
 $ conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-
+$ conan remote add wumo https://api.bintray.com/conan/wumo/public
 ``` 
 
 ## Build 
