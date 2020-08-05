@@ -42,6 +42,7 @@ add_executable(glslvk_exe
 target_include_directories(glslvk_exe PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/src)
 target_link_libraries(glslvk_exe PUBLIC glslvk)
+install(TARGETS glslvk_exe)
 
 if(BUILD_TEST)
   file(GLOB_RECURSE test-sources CONFIGURE_DEPENDS "test/*.cpp")

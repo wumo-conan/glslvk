@@ -1,7 +1,7 @@
 function(glslvkcompile name isStatic namespace srcDir outputDir)
-  set(glslvk_exe ${CONAN_BIN_DIRS_FILE2HEADER}/file2header)
+  set(glslvk_exe ${CONAN_BIN_DIRS_GLSLVK}/glslvk_exe)
   file(MAKE_DIRECTORY "${outputDir}")
-  file(GLOB_RECURSE resources
+  file(GLOB_RECURSE shaders
     "${srcDir}/*.vert"
     "${srcDir}/*.frag"
     "${srcDir}/*.geom"
@@ -18,7 +18,7 @@ function(glslvkcompile name isStatic namespace srcDir outputDir)
     "${srcDir}/*.mesh"
     )
   set(outputFiles)
-  foreach(file ${resources})
+  foreach(file ${shaders})
     get_filename_component(fileName ${file} NAME)
     get_filename_component(ext ${file} LAST_EXT)
     get_filename_component(dir ${file} DIRECTORY)
@@ -30,14 +30,14 @@ function(glslvkcompile name isStatic namespace srcDir outputDir)
     
     add_custom_command(OUTPUT ${outptuFile}/${cxxName}.hpp ${outptuFile}/${cxxName}.cpp
       COMMAND ${CMAKE_COMMAND} -E make_directory "${outputDir}/${relativeDir}"
-      COMMAND ${file2header} -i ${file} -o ${outptuFile} -n ${cxxName} -s ${namespace} -r ${relativeDir}
+      COMMAND ${glslvk_exe} -i ${file} -o ${outptuFile} -n ${cxxName} -s ${namespace} -r ${relativeDir}
       DEPENDS ${file})
   endforeach()
   if(${isStatic})
     add_library(${name} STATIC ${outputFiles})
   else()
     add_library(${name} SHARED ${outputFiles})
-    target_compile_definitions(${name} PUBLIC "FILE2HEADER_BUILD_SHARED_LIBRARY")
+    target_compile_definitions(${name} PUBLIC "GLSLVK_SHADER_BUILD_SHARED_LIBRARY")
   endif()
   
   target_include_directories(${name} INTERFACE ${outputDir})
