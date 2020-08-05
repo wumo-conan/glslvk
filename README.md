@@ -5,7 +5,7 @@ GLSL shader compiler. Features:
 * Generate  seperated header and source cpp files for compiled SPV binaries.
 * C++ 20
 
-This project is based on [shaderc](https://github.com/google/shaderc).
+This project is based on [shaderc](https://github.com/google/shaderc). [conan](https://conan.io/) is used as the package manager.
 
 # Usage
 
