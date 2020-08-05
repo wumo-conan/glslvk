@@ -36,9 +36,12 @@ auto ShaderCompiler::compile(const std::string &filename) -> std::span<uint32_t>
   lastResult = compiler_.CompileGlslToSpv(
     source_string.data(), source_string.size(), inputFile.stage, error_file_name.data(),
     inputFile.entry_point_name.c_str(), options_);
+  if(lastResult.GetCompilationStatus() != shaderc_compilation_status_success)
+    throw std::runtime_error(lastResult.GetErrorMessage());
   std::span<uint32_t> span{
     (uint32_t *)lastResult.begin(),
     static_cast<size_t>(lastResult.end() - lastResult.begin())};
+
   return span;
 }
 }
