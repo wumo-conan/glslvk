@@ -45,6 +45,7 @@ target_link_libraries(glslvk_exe PUBLIC glslvk)
 install(TARGETS glslvk_exe)
 
 if(BUILD_TEST)
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/compile_shaders.cmake)
   file(GLOB_RECURSE test-sources CONFIGURE_DEPENDS "test/*.cpp")
   foreach(file ${test-sources})
     get_filename_component(comp ${file} NAME_WE)
@@ -52,5 +53,8 @@ if(BUILD_TEST)
     target_include_directories(${comp} PUBLIC
       ${CMAKE_CURRENT_LIST_DIR}/test)
     target_link_libraries(${comp} PUBLIC glslvk)
+    static_shader_ns(${comp} res ${CMAKE_CURRENT_LIST_DIR}/assets/shaders
+      ${CMAKE_CURRENT_LIST_DIR}/src/resources)
+    add_dependencies(${comp}_shaders glslvk_exe)
   endforeach()
 endif()

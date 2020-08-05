@@ -4,12 +4,15 @@
 #include <shaderc/shaderc.hpp>
 #include <libshaderc_util/file_finder.h>
 #include <libshaderc_util/string_piece.h>
+#include <glslc/dependency_info.h>
 #include <span>
+#include <unordered_set>
 namespace glslvk {
 class ShaderCompiler {
 
 public:
-  auto compile(const std::string &filename) -> std::span<uint32_t>;
+  auto compile(const std::string &filename, std::unordered_set<std::string> &depFiles)
+    -> std::span<uint32_t>;
 
 private:
   static auto compileGlslang(const std::string &filename) -> std::vector<uint32_t>;

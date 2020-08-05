@@ -1,5 +1,6 @@
 function(glslvkcompile name isStatic namespace srcDir outputDir)
   set(glslvk_exe ${CONAN_BIN_DIRS_GLSLVK}/glslvk_exe)
+  #    set(glslvk_exe "glslvk_exe")
   file(MAKE_DIRECTORY "${outputDir}")
   file(GLOB_RECURSE shaders
     "${srcDir}/*.vert"
@@ -17,6 +18,10 @@ function(glslvkcompile name isStatic namespace srcDir outputDir)
     "${srcDir}/*.task"
     "${srcDir}/*.mesh"
     )
+  file(GLOB_RECURSE headers
+    "${srcDir}/*.h"
+    "${srcDir}/*.glsl"
+    )
   set(outputFiles)
   foreach(file ${shaders})
     get_filename_component(fileName ${file} NAME)
@@ -29,14 +34,31 @@ function(glslvkcompile name isStatic namespace srcDir outputDir)
     set(genDir "${outputDir}/${relativeDir}")
     set(genHeader "${genDir}/${cxxName}.hpp")
     set(genSource "${genDir}/${cxxName}.cpp")
+    set(genDep "${genDir}/${cxxName}.d")
     
     set(outputFiles ${outputFiles} ${genSource})
     
-    add_custom_command(OUTPUT ${genHeader} ${genSource}
-      COMMAND ${CMAKE_COMMAND} -E make_directory ${genDir}
-      COMMAND ${CMAKE_COMMAND} -E rm -f ${genHeader} ${genSource}
-      COMMAND ${glslvk_exe} -i ${file} -o ${genDir} -n ${cxxName} -s ${namespace} -r ${relativeDir}
-      DEPENDS ${file})
+    if(CMAKE_GENERATOR STREQUAL "Ninja")
+      add_custom_command(OUTPUT ${genHeader} ${genSource}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${genDir}
+        COMMAND ${CMAKE_COMMAND} -E rm -f ${genHeader} ${genSource}
+        COMMAND ${glslvk_exe}
+        --input ${file} --output ${genDir}
+        --name ${cxxName} --namespace ${namespace} --relative ${relativeDir}
+        --dep --source ${CMAKE_SOURCE_DIR} --bin ${CMAKE_BINARY_DIR}
+        DEPENDS ${file}
+        DEPFILE ${genDep}
+        COMMENT "Compiling shader ${file}")
+    else()
+      add_custom_command(OUTPUT ${genHeader} ${genSource}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${genDir}
+        COMMAND ${CMAKE_COMMAND} -E rm -f ${genHeader} ${genSource}
+        COMMAND ${glslvk_exe}
+        --input ${file} --output ${genDir}
+        --name ${cxxName} --namespace ${namespace} --relative ${relativeDir}
+        DEPENDS ${file} ${headers}
+        COMMENT "Compiling shader ${file}")
+    endif()
   endforeach()
   if(${isStatic})
     add_library(${name} STATIC ${outputFiles})

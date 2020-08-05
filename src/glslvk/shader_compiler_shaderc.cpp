@@ -4,13 +4,19 @@
 #include <libshaderc_util/io.h>
 #include <glslc/file_includer.h>
 
+#include <memory>
+#include <sstream>
+#include <fstream>
+
 namespace glslvk {
-auto ShaderCompiler::compile(const std::string &filename) -> std::span<uint32_t> {
+auto ShaderCompiler::compile(
+  const std::string &filename, std::unordered_set<std::string> &depFiles)
+  -> std::span<uint32_t> {
   glslc::InputFileSpec inputFile{
     filename, glslc::DeduceDefaultShaderKindFromFileName(filename),
     shaderc_source_language_glsl, "main"};
 
-  shaderc_util::string_piece error_file_name = inputFile.name;
+  std::string error_file_name = inputFile.name;
 
   std::vector<char> input_data;
   std::string path = inputFile.name;
@@ -34,14 +40,14 @@ auto ShaderCompiler::compile(const std::string &filename) -> std::span<uint32_t>
   options_.SetSourceLanguage(inputFile.language);
 
   lastResult = compiler_.CompileGlslToSpv(
-    source_string.data(), source_string.size(), inputFile.stage, error_file_name.data(),
+    source_string.data(), source_string.size(), inputFile.stage, error_file_name.c_str(),
     inputFile.entry_point_name.c_str(), options_);
   if(lastResult.GetCompilationStatus() != shaderc_compilation_status_success)
     throw std::runtime_error(lastResult.GetErrorMessage());
   std::span<uint32_t> span{
     (uint32_t *)lastResult.begin(),
     static_cast<size_t>(lastResult.end() - lastResult.begin())};
-
+  depFiles = used_source_files;
   return span;
 }
 }
