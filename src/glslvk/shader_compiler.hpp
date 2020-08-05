@@ -15,8 +15,7 @@ public:
     -> std::span<uint32_t>;
 
 private:
-  static auto compileGlslang(const std::string &filename) -> std::vector<uint32_t>;
-
+  
   shaderc::Compiler compiler_;
 
   // Reflects the command-line arguments and goes into
