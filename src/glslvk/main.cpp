@@ -79,6 +79,8 @@ auto main(int argc, char **argv) -> int {
       auto sourcePath = std::filesystem::canonical(source);
       auto binPath = std::filesystem::canonical(bin);
 
+      //Current version of ninja may generate relative target, so we need to align to it to
+      //make depfile work.
       //if bot binPath and outputPath are within sourcePath, always use relative
       //else use relative only when binPath is the parent of outputPath
       if(
