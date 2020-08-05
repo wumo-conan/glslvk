@@ -1,5 +1,5 @@
 function(glslvkcompile name isStatic namespace srcDir outputDir)
-  set(file2header ${CONAN_BIN_DIRS_FILE2HEADER}/file2header)
+  set(glslvk_exe ${CONAN_BIN_DIRS_FILE2HEADER}/file2header)
   file(MAKE_DIRECTORY "${outputDir}")
   file(GLOB_RECURSE resources
     "${srcDir}/*.vert"
