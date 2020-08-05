@@ -42,7 +42,7 @@ auto shader_spv = shader::deferred::gbuffer_vert_span;
 
 ## Prerequisite
 
-install `python3`,`git`,`gcc`,`cmake`,`make`,`conan`.
+install `python3`, `git`, `cmake`, `conan`, `make`, `gcc`(>= 10), `Microsoft Visual Studio`(>=2019)
 
 ## Ubuntu
 ```
