@@ -20,17 +20,22 @@ function(glslvkcompile name isStatic namespace srcDir outputDir)
   set(outputFiles)
   foreach(file ${shaders})
     get_filename_component(fileName ${file} NAME)
-    get_filename_component(ext ${file} LAST_EXT)
     get_filename_component(dir ${file} DIRECTORY)
     file(RELATIVE_PATH relativeFile "${srcDir}" "${file}")
     file(RELATIVE_PATH relativeDir "${srcDir}" "${dir}")
-    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" cxxName ${fileName})
-    set(outptuFile ${outputDir}/${relativeDir})
-    set(outputFiles ${outputFiles} ${outptuFile}/${cxxName}.cpp)
     
-    add_custom_command(OUTPUT ${outptuFile}/${cxxName}.hpp ${outptuFile}/${cxxName}.cpp
-      COMMAND ${CMAKE_COMMAND} -E make_directory "${outputDir}/${relativeDir}"
-      COMMAND ${glslvk_exe} -i ${file} -o ${outptuFile} -n ${cxxName} -s ${namespace} -r ${relativeDir}
+    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" cxxName ${fileName})
+    
+    set(genDir "${outputDir}/${relativeDir}")
+    set(genHeader "${genDir}/${cxxName}.hpp")
+    set(genSource "${genDir}/${cxxName}.cpp")
+    
+    set(outputFiles ${outputFiles} ${genSource})
+    
+    add_custom_command(OUTPUT ${genHeader} ${genSource}
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${genDir}
+      COMMAND ${CMAKE_COMMAND} -E rm -f ${genHeader} ${genSource}
+      COMMAND ${glslvk_exe} -i ${file} -o ${genDir} -n ${cxxName} -s ${namespace} -r ${relativeDir}
       DEPENDS ${file})
   endforeach()
   if(${isStatic})

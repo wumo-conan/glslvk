@@ -41,6 +41,7 @@ auto main(int argc, char **argv) -> int {
   } catch(std::exception &e) {
     std::cerr << "error: " << e.what() << std::endl
               << "usage:" << argv[0] << " -i file -o header" << std::endl;
+    return -1;
   }
   try {
     ShaderCompiler compiler;
@@ -107,5 +108,9 @@ auto main(int argc, char **argv) -> int {
       }
     }
     fcpp << "};" << std::endl << nsEnd << std::endl;
-  } catch(std::exception &e) { std::cerr << e.what() << std::endl; }
+  } catch(std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return -1;
+  }
+  return 0;
 }
