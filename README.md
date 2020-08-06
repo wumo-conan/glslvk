@@ -2,7 +2,7 @@
 
 GLSL shader compiler. Features:
 * Support generating ninja depfile for shader includes. Thus modified shader header files can only trigger necessary shader source files' recompilation. (Only work on `Ninja` Generator)
-* Generate  seperated header and source cpp files for compiled SPV binaries.
+* Generate  seperated header and source cpp files for compiled SPIRV binaries.
 * C++ 20
 
 This project is based on [shaderc](https://github.com/google/shaderc). [conan](https://conan.io/) is used as the package manager.
@@ -26,7 +26,7 @@ In your `CMakeLists.txt`:
 static_shader_ns(<target> <namespace> <shader_source_dir> <output_dir>)
 ```
 
-* \<target\> is the binary target that the compiled SPV binaries will be linked to.
+* \<target\> is the binary target that the compiled SPIRV binaries will be linked to.
 * \<namespace\> is the c++ namespace that groups all your shader spans.
 * \<shader_source_dir\> and \<output_dir\> are the input and outpu of shader files.
 
