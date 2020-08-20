@@ -3,7 +3,7 @@ from conans import ConanFile, CMake, tools
 
 class glslvkConan(ConanFile):
     name = "glslvk"
-    version = "0.0.1"
+    version = "0.0.2"
     settings = "os", "compiler", "build_type", "arch"
     requires = ("shaderc/2020.2@wumo/stable")
     generators = "cmake"

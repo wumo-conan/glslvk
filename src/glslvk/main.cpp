@@ -73,7 +73,6 @@ auto main(int argc, char **argv) -> int {
     ShaderCompiler compiler;
     std::unordered_set<std::string> depFiles;
     auto buffer = compiler.compile(inputPath.string(), depFiles);
-    std::cout << buffer.size() << std::endl;
 
     if(dep) {
       auto sourcePath = std::filesystem::canonical(source);
